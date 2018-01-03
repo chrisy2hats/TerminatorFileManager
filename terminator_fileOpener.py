@@ -3,7 +3,7 @@ from terminatorlib import plugin, config #Terminators library. This is not acces
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
-from subprocess import call #Used to run Bash commands from Python
+from subprocess import Popen #Used to run Bash commands from Python
 
 AVAILABLE = ['TerminatorFileManager']
 
@@ -35,4 +35,5 @@ class TerminatorFileManager(plugin.MenuItem):
 
   #Function called when the user clicks open in file manager.
   def on_click(self, widget, event):
-    call(["xdg-open",self.globalPWD])#xdg-open should open the users default program for opening a directory
+    #Popen runs the Bash command as a seperate process uncall the "call" function from the subprocess library
+    Popen(["xdg-open",self.globalPWD])#xdg-open should open the users default program for opening a directory
