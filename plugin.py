@@ -1,9 +1,9 @@
-#!/usr/bin/python
-from terminatorlib import plugin, config #Terminators library. This is not accessible when this program is run standalone.
+from terminatorlib import plugin, config
 import gi
+import os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
-from subprocess import Popen #Used to run Bash commands from Python
+from subprocess import Popen
 
 AVAILABLE = ['TerminatorFileManager']
 
@@ -12,14 +12,20 @@ class TerminatorFileManager(plugin.MenuItem):
 
   def __init__(self):
     self.plugin_name = self.__class__.__name__
-    self.globalPWD = "/home"
+    self.pwd = os.path.expanduser("~")
 
-  #This function is called whenever the user right clicks within Terminator
-  #The function should set the value of globalPWD and add the option to the menu that appears when the user right clicks
+  def get_terminal_pwd(terminal) -> str:
+    # To remain backwards compatible with older version of Terminator
+    if hasattr(pid_cwd.terminal.terminator):
+        return terminal.terminator.pid_cwd(terminal.pid)
+
+    return terminal.get_cwd()
+
+  # This function is called whenever the user right clicks within Terminator
+  # The function should set the value of pwd and add the option to the menu that appears when the user right clicks
   def callback(self, menuitems, menu, terminal):
-    pwd = terminal.terminator.pid_cwd(terminal.pid)
-    self.globalPWD = pwd
-    self.add_submenu(menu, ("Open "+self.globalPWD+" in file manager"), terminal)
+    self.pwd = get_terminal_pwd(terminal)
+    self.add_submenu(menu, ("Open "+self.pwd+" in file manager"), terminal)
 
   #Function to add the option to open in file manager to the list spawned by the user right clicking
   def add_submenu(self, submenu, name, terminal):
@@ -35,5 +41,5 @@ class TerminatorFileManager(plugin.MenuItem):
 
   #Function called when the user clicks open in file manager.
   def on_click(self, widget, event):
-    #Popen runs the Bash command as a seperate process uncall the "call" function from the subprocess library
-    Popen(["xdg-open",self.globalPWD])#xdg-open should open the users default program for opening a directory
+    # Spawn the user's default program for handling directory (their file manager) as a separate process'
+    Popen(["xdg-open", self.pwd])
