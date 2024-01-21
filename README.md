@@ -1,6 +1,8 @@
 # Terminator File Manager
 [Terminator](https://gnome-terminator.org/) plugin to add an option to open the current directory in your default file manager
 
+![Example screenshottext](.images/terminator-example-screenshot.png "Title")
+
 # Install
 ```
 mkdir -p $HOME/.config/terminator/plugins/
