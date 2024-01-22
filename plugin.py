@@ -14,18 +14,11 @@ class TerminatorFileManager(plugin.MenuItem):
     self.plugin_name = self.__class__.__name__
     self.pwd = os.path.expanduser("~")
 
-  def get_terminal_pwd(terminal) -> str:
-    # To remain backwards compatible with older version of Terminator
-    if hasattr(pid_cwd.terminal.terminator):
-        return terminal.terminator.pid_cwd(terminal.pid)
-
-    return terminal.get_cwd()
-
   # This function is called whenever the user right clicks within Terminator
   # The function should set the value of pwd and add the option to the menu that appears when the user right clicks
   def callback(self, menuitems, menu, terminal):
-    self.pwd = get_terminal_pwd(terminal)
-    self.add_submenu(menu, ("Open "+self.pwd+" in file manager"), terminal)
+    self.pwd = terminal.get_cwd()
+    self.add_submenu(menu, (f"Open {self.pwd} in file manager"), terminal)
 
   #Function to add the option to open in file manager to the list spawned by the user right clicking
   def add_submenu(self, submenu, name, terminal):
