@@ -34,6 +34,9 @@ class TerminatorFileManager(plugin.MenuItem):
 
     homedir = os.path.expanduser("~")
     shortPWD = self.pwd.replace(homedir, "~")
+    if self.pwd == homedir:
+        shortPWD = "home"
+
     prompt = f"Open {shortPWD} in {self.filemanager_name}"
     self.add_submenu(menu, prompt, terminal)
 
